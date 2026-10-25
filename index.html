@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Buckshot</title>
+  <meta name="description" content="Помощник для физической игры Buckshot Roulette: загрузка, лупа и история патронов." />
+  <meta name="theme-color" content="#07070a" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Buckshot" />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app" id="app">
+    <header class="topbar">
+      <div class="brand">
+        <h1 class="brand__title">Buckshot</h1>
+        <p class="brand__sub">физическая игра</p>
+      </div>
+      <button type="button" class="icon-btn" id="settingsBtn" aria-label="Открыть настройки" aria-haspopup="dialog">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="3.2" />
+          <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1.03 1.56V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.56 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.56-1.03H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 8.86a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 8.96 4.5h.09A1.7 1.7 0 0 0 10.08 3V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9v.09a1.7 1.7 0 0 0 1.56 1.03H21a2 2 0 1 1 0 4h-.09A1.7 1.7 0 0 0 19.4 15Z" />
+        </svg>
+      </button>
+    </header>
+
+    <main class="board is-loading">
+      <section class="stage" id="stage" data-phase="loading" data-type="loading" aria-label="Загрузка патронов">
+        <div class="stage__halo" aria-hidden="true"></div>
+
+        <div class="load-strip" id="loadStrip" role="list" aria-label="Состав загрузки по типам патронов"></div>
+
+        <div class="shell-wrap" id="shellWrap">
+          <div class="shell" id="shell" data-type="hidden" aria-hidden="true">
+            <svg class="shell__svg" viewBox="0 0 120 224">
+              <ellipse class="shell__ground" cx="60" cy="217" rx="44" ry="6" />
+              <path class="shell__body" d="M22 38c0-8 6-14 14-14h48c8 0 14 6 14 14v122c0 4-2 6-6 6H28c-4 0-6-2-6-6V38Z" />
+              <rect class="shell__gloss" x="31" y="35" width="10" height="114" rx="5" />
+              <path class="shell__shade" d="M88 32h6c4 0 6 4 6 8v116c0 6-2 8-6 8h-6V32Z" />
+              <ellipse class="shell__top" cx="60" cy="24" rx="38" ry="9" />
+              <ellipse class="shell__top-inner" cx="60" cy="23.6" rx="31.5" ry="6.6" />
+              <path class="shell__top-shadow" d="M29 28.4c8 3.6 20 5 31 4.4" />
+              <ellipse class="shell__top-dimple" cx="60" cy="23.4" rx="9.5" ry="2.1" />
+              <rect class="shell__brass" x="17" y="160" width="86" height="44" rx="5" />
+              <path class="shell__brass-line" d="M17 170h86M17 194h86" />
+              <rect class="shell__rim" x="13" y="198" width="94" height="13" rx="5" />
+              <circle class="shell__primer" cx="60" cy="205" r="7" />
+            </svg>
+          </div>
+
+          <div class="shell-empty" id="emptyShell" aria-hidden="true">
+            <svg class="shell-empty__svg" viewBox="0 0 120 224">
+              <ellipse class="empty__ground" cx="60" cy="217" rx="44" ry="6" />
+              <rect class="empty__outline" x="18" y="24" width="84" height="187" rx="12" />
+              <path class="empty__outline" d="M18 160h84" />
+              <circle class="empty__outline" cx="60" cy="201" r="6.5" />
+              <path class="empty__cross" d="m48 82 24 24M72 82l-24 24" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="caption">
+          <p class="caption__title" id="stageTitle">Загрузка</p>
+          <p class="caption__hint" id="stageHint">Патроны сгруппированы по типу</p>
+        </div>
+      </section>
+
+      <aside class="mag" id="mag" aria-hidden="true">
+        <span class="mag__cap"></span>
+        <div class="mag__rail">
+          <div class="mag__cells" id="magCells"></div>
+        </div>
+        <span class="mag__base"></span>
+      </aside>
+    </main>
+
+    <p class="readout" id="readout">
+      <span class="readout__label" id="readoutLabel">в загрузке</span>
+      <span class="readout__value" id="readoutValue">3</span>
+    </p>
+
+    <footer class="controls is-loading">
+      <button type="button" class="btn btn--loupe" id="loupeBtn" aria-label="Посмотреть текущий патрон" hidden>
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="10.5" cy="10.5" r="6.3" />
+          <path d="m15.3 15.3 5 5" />
+          <path d="M8.2 10.5h4.6M10.5 8.2v4.6" />
+        </svg>
+        <span>Лупа</span>
+      </button>
+
+      <button type="button" class="btn btn--fire" id="fireBtn" data-action="charge" aria-label="Зарядить патроны">
+        <svg class="btn__icon btn__icon--fire" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 2.6h6v3.1l1.6 1.7v8.4H7.4V7.4L9 5.7V2.6Z" />
+          <path d="M7.4 15.8h9.2V21H7.4z" />
+          <path d="M9.5 18.4h5" />
+        </svg>
+        <svg class="btn__icon btn__icon--charge" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3v10" />
+          <path d="m8 9 4 4 4-4" />
+          <path d="M5 20h14" />
+        </svg>
+        <svg class="btn__icon btn__icon--eject" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 14V4" />
+          <path d="m8 8 4-4 4 4" />
+          <path d="M5 20h14" />
+        </svg>
+        <span id="fireLabel">Зарядить</span>
+      </button>
+
+      <button type="button" class="btn btn--reload" id="reloadBtn" aria-label="Начать новую загрузку">
+        <span class="btn__main">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 12a8 8 0 1 1-2.4-5.7" />
+            <path d="M20 4v5h-5" />
+          </svg>
+          <span>Новая загрузка</span>
+        </span>
+        <span class="btn__sub" id="reloadSub">нажмите</span>
+      </button>
+    </footer>
+  </div>
+
+  <dialog class="sheet" id="settingsDialog" aria-labelledby="settingsTitle">
+    <div class="sheet__inner">
+      <header class="sheet__head">
+        <div>
+          <h2 class="sheet__title" id="settingsTitle">Настройки</h2>
+          <p class="sheet__sub">особые патроны — со следующей загрузки</p>
+        </div>
+        <button type="button" class="icon-btn" id="closeSettingsBtn" aria-label="Закрыть настройки">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m6 6 12 12M18 6 6 18" />
+          </svg>
+        </button>
+      </header>
+
+      <form method="dialog" id="settingsForm">
+        <section class="group">
+          <h3>Особые патроны</h3>
+
+          <label class="switch" for="goldEnabled">
+            <span class="switch__text">
+              <span class="switch__title"><i class="dot dot--gold"></i>Золотой патрон</span>
+              <small>заменяет боевой</small>
+            </span>
+            <input type="checkbox" id="goldEnabled" />
+            <span class="switch__track" aria-hidden="true"></span>
+          </label>
+
+          <div class="range-row" id="goldRangeRow">
+            <label class="range-row__label" for="goldChance">Шанс появления</label>
+            <output class="range-row__value" id="goldValue" for="goldChance">20%</output>
+            <input type="range" id="goldChance" min="0" max="100" step="1" value="20" />
+          </div>
+
+          <label class="switch" for="purpleEnabled">
+            <span class="switch__text">
+              <span class="switch__title"><i class="dot dot--purple"></i>Фиолетовый патрон</span>
+              <small>заменяет холостой</small>
+            </span>
+            <input type="checkbox" id="purpleEnabled" />
+            <span class="switch__track" aria-hidden="true"></span>
+          </label>
+
+          <div class="range-row" id="purpleRangeRow">
+            <label class="range-row__label" for="purpleChance">Шанс появления</label>
+            <output class="range-row__value" id="purpleValue" for="purpleChance">20%</output>
+            <input type="range" id="purpleChance" min="0" max="100" step="1" value="20" />
+          </div>
+
+          <p class="hint">Каждый тип разыгрывается отдельно. В одной загрузке может быть не больше одного золотого и одного фиолетового.</p>
+        </section>
+
+        <section class="group">
+          <h3>Отображение</h3>
+
+          <label class="switch" for="showSpecialsOnLoad">
+            <span class="switch__text">
+              <span class="switch__title">Особые патроны при загрузке</span>
+              <small>только на экране загрузки: золотой — как боевой, фиолетовый — как холостой</small>
+            </span>
+            <input type="checkbox" id="showSpecialsOnLoad" />
+            <span class="switch__track" aria-hidden="true"></span>
+          </label>
+
+          <label class="switch" for="historyEnabled">
+            <span class="switch__text">
+              <span class="switch__title">История патронов</span>
+              <small>использованные патроны снизу вверх</small>
+            </span>
+            <input type="checkbox" id="historyEnabled" />
+            <span class="switch__track" aria-hidden="true"></span>
+          </label>
+
+          <label class="switch" for="countEnabled">
+            <span class="switch__text">
+              <span class="switch__title">Показывать количество</span>
+              <small>сколько патронов осталось в загрузке</small>
+            </span>
+            <input type="checkbox" id="countEnabled" />
+            <span class="switch__track" aria-hidden="true"></span>
+          </label>
+
+          <p class="hint">Если количество скрыто, шкала не разлинована. История показывает только уже израсходованные патроны.</p>
+        </section>
+
+        <section class="group">
+          <h3>Вибрация</h3>
+
+          <label class="switch" for="vibrationEnabled">
+            <span class="switch__text">
+              <span class="switch__title">Вибрация</span>
+              <small>отклик на выстрел и действия</small>
+            </span>
+            <input type="checkbox" id="vibrationEnabled" />
+            <span class="switch__track" aria-hidden="true"></span>
+          </label>
+
+          <div class="segmented" id="vibrationLevels" role="radiogroup" aria-label="Сила вибрации">
+            <label><input type="radio" name="vibrationLevel" value="weak" /><span>Слабая</span></label>
+            <label><input type="radio" name="vibrationLevel" value="medium" /><span>Средняя</span></label>
+            <label><input type="radio" name="vibrationLevel" value="strong" /><span>Сильная</span></label>
+          </div>
+
+          <p class="hint">На Android сила вибрации задаётся длительностью импульса и зависит от устройства.</p>
+        </section>
+
+        <button type="submit" class="btn btn--done" value="done">Готово</button>
+        <p class="sheet__footer">Buckshot · настройки хранятся на этом устройстве</p>
+      </form>
+    </div>
+  </dialog>
+
+  <p class="sr-only" id="srStatus" role="status" aria-live="polite"></p>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
